@@ -9,8 +9,9 @@ export default function Page() {
         alt="Bangers and Mash GBG"
         width={200}
         height={200}
-        className="mx-auto"
+        className="mx-auto my-8"
       />
+      <h1 className="mb-4 text-xl">Sign up to our guest list here</h1>
       <SignUp />
     </div>
   );

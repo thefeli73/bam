@@ -8,20 +8,7 @@ export type listmonkData = {
   attribs: {};
 };
 
-async function makeApiCall(url: string, options?: RequestInit) {
-  try {
-    const response = await fetch(url, options);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error("Error making API call:", error);
-    throw error;
-  }
-}
-
-async function listmonk(data: listmonkData) {
+async function listmonk(data: listmonkData): Promise<string> {
   const listmonkUrl = process.env.LISTMONK_URL ?? "http://localhost:9000/api/";
   const listmonkUser = process.env.LISTMONK_USER ?? "nouser";
   const listmonkPass = process.env.LISTMONK_PASS ?? "nopass";
@@ -39,12 +26,11 @@ async function listmonk(data: listmonkData) {
   try {
     const response = await fetch(`${listmonkUrl}subscribers`, options);
     if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
+      return "Error. please try again soon.";
     }
-    const responseData = await response.json();
-    console.log("Subscriber created successfully:", responseData);
+    return "Thanks for signing up!";
   } catch (error) {
-    console.error("Failed to create subscriber:", error);
+    return "Error. please try again soon.";
   }
 }
 
