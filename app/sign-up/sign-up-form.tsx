@@ -5,15 +5,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -39,7 +31,7 @@ export default function SignUp() {
     defaultValues: {
       name: "",
       email: "",
-      dob: youngestDate,
+      dob: undefined,
     },
   });
   async function onSubmit(values: z.infer<typeof signupFormSchema>) {
@@ -59,9 +51,7 @@ export default function SignUp() {
                 <FormControl>
                   <Input placeholder="name@example.com" {...field} />
                 </FormControl>
-                <FormDescription>
-                  We will contact you here with information about events.
-                </FormDescription>
+                <FormDescription>We will contact you here with information about events.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -91,10 +81,7 @@ export default function SignUp() {
                     <FormControl>
                       <Button
                         variant={"outline"}
-                        className={cn(
-                          "w-[240px] pl-3 text-left font-normal",
-                          !field.value && "text-muted-foreground"
-                        )}
+                        className={cn("w-[240px] pl-3 text-left font-normal", !field.value && "text-muted-foreground")}
                       >
                         {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
                         <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
