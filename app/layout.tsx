@@ -10,8 +10,8 @@ export const viewport: Viewport = {
   colorScheme: "dark",
 };
 export const metadata: Metadata = {
-  title: "Bangers and Mash GBG",
-  description: "Sign up to the Bangers and Mash GBG guest list",
+  title: "Guest List - Bangers and Mash",
+  description: "Sign up to the Bangers and Mash guest list here to join our parties.",
 };
 
 export default function RootLayout({
@@ -27,7 +27,6 @@ export default function RootLayout({
           customDomain="https://analytics.schulze.network"
           selfHosted={true}
           enabled={true}
-          trackOutboundLinks={true}
         />
       </head>
       <body className={cn("min-h-screen bg-background font-sans antialiased", inter.variable)}>

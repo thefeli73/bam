@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { oldestDate, signupFormSchema, youngestDate } from "@/app/sign-up/sign-up-form";
+import { oldestDate, signupFormSchema, youngestDate } from "@/app/sign-up-form";
 import listmonk, { listmonkData } from "./listmonk";
 
 export async function signupFormSubmit(data: z.infer<typeof signupFormSchema>): Promise<string> {
