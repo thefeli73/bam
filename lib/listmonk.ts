@@ -26,11 +26,11 @@ async function listmonk(data: listmonkData): Promise<string> {
   try {
     const response = await fetch(`${listmonkUrl}subscribers`, options);
     if (!response.ok) {
-      return "Error. please try again soon.";
+      return "Error. Please try again soon.";
     }
-    return "Thanks for signing up!";
+    return "Thanks for signing up! Please check your email for a confirmation.";
   } catch (error) {
-    return "Error. please try again soon.";
+    return "Error. Please contact us.";
   }
 }
 

@@ -15,7 +15,7 @@ export async function signupFormSubmit(data: z.infer<typeof signupFormSchema>): 
     email: data.email,
     name: data.name,
     status: "enabled",
-    lists: [6],
+    lists: [3],
     attribs: {
       dob: data.dob.toISOString().split("T")[0],
     },
