@@ -28,6 +28,7 @@ export default function RootLayout({
           selfHosted={true}
           enabled={true}
         />
+        <meta name="apple-mobile-web-app-title" content="BAM" />
       </head>
       <body className={cn("min-h-screen bg-background font-sans antialiased", inter.variable)}>
         {children}
