@@ -5,7 +5,15 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
@@ -14,6 +22,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 import { signupFormSubmit } from "@/lib/actions";
 import { useState } from "react";
+import { before } from "node:test";
 
 export const signupFormSchema = z.object({
   name: z.string().min(2, { message: "Name is required" }).max(50, { message: "Name is too long" }),
@@ -51,7 +60,9 @@ export default function SignUp() {
                 <FormControl>
                   <Input placeholder="name@example.com" {...field} />
                 </FormControl>
-                <FormDescription>We will contact you here with information about events.</FormDescription>
+                <FormDescription>
+                  We will contact you here with information about events.
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -81,7 +92,10 @@ export default function SignUp() {
                     <FormControl>
                       <Button
                         variant={"outline"}
-                        className={cn("w-[240px] pl-3 text-left font-normal", !field.value && "text-muted-foreground")}
+                        className={cn(
+                          "w-[240px] pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground"
+                        )}
                       >
                         {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
                         <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
@@ -95,11 +109,12 @@ export default function SignUp() {
                       showOutsideDays={false}
                       selected={field.value}
                       onSelect={field.onChange}
-                      disabled={(date) => date > youngestDate}
                       defaultMonth={field.value}
-                      fromDate={oldestDate}
-                      toDate={youngestDate}
+                      startMonth={oldestDate}
+                      endMonth={youngestDate}
+                      disabled={[{ before: oldestDate }, { after: youngestDate }]}
                       captionLayout="dropdown"
+                      hideNavigation
                     />
                   </PopoverContent>
                 </Popover>
