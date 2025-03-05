@@ -5,7 +5,7 @@ export type listmonkData = {
   name: string;
   status: "enabled" | "blocklisted";
   lists: number[];
-  attribs: {};
+  attribs: Record<string, string>;
 };
 
 async function listmonk(data: listmonkData): Promise<string> {
