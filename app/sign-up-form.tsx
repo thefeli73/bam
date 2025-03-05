@@ -22,14 +22,13 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 import { signupFormSubmit } from "@/lib/actions";
 import { useState } from "react";
-import { before } from "node:test";
 
 export const signupFormSchema = z.object({
   name: z.string().min(2, { message: "Name is required" }).max(50, { message: "Name is too long" }),
   email: z.string().email({ message: "Email is invalid" }),
   dob: z.date({ required_error: "Birthday is required" }),
 });
-export const youngestDate = new Date(new Date().setFullYear(new Date().getFullYear() - 21));
+export const youngestDate = new Date(new Date().setFullYear(new Date().getFullYear() - 20));
 export const oldestDate = new Date(new Date().setFullYear(new Date().getFullYear() - 100));
 
 export default function SignUp() {
@@ -118,7 +117,7 @@ export default function SignUp() {
                     />
                   </PopoverContent>
                 </Popover>
-                <FormDescription>You must be over 21 to sign up.</FormDescription>
+                <FormDescription>You must be over 20 to sign up.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}
