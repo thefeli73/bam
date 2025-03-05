@@ -11,7 +11,7 @@ export default function Page() {
         height={200}
         className="mx-auto my-8"
       />
-      <h1 className="mb-4 text-xl">Sign up to our guest list here</h1>
+      <h1 className="mb-4 text-xl">Sign up to our members list here</h1>
       <SignUp />
     </div>
   );

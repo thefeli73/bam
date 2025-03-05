@@ -10,8 +10,8 @@ export const viewport: Viewport = {
   colorScheme: "dark",
 };
 export const metadata: Metadata = {
-  title: "Guest List - Bangers and Mash",
-  description: "Sign up to the Bangers and Mash guest list here to join our parties.",
+  title: "Members List - Bangers and Mash",
+  description: "Sign up to the Bangers and Mash members list here to join our parties.",
 };
 
 export default function RootLayout({
