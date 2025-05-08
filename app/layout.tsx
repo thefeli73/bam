@@ -23,7 +23,7 @@ export default function RootLayout({
     <html lang="en" className="scroll-smooth dark">
       <head>
         <PlausibleProvider
-          domain="bangersandmashgbg.com"
+          domain="signup.bangersandmashgbg.com"
           customDomain="https://analytics.schulze.network"
           selfHosted={true}
           enabled={true}
