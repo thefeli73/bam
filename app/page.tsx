@@ -5,6 +5,8 @@ export default function Page() {
   return (
     <div className="w-4/5 max-w-2xl mx-auto my-12">
       <Image
+        priority
+        unoptimized
         src="/image/bam.svg"
         alt="Bangers and Mash GBG"
         width={200}
