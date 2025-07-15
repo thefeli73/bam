@@ -29,7 +29,7 @@ async function listmonk(data: listmonkData): Promise<string> {
       return "An error occurred or this email is already subscribed.";
     }
     return "Thanks for signing up! Please check your email for a confirmation.";
-  } catch (error) {
+  } catch {
     return "An error occurred while trying to sign up. Please try again.";
   }
 }
