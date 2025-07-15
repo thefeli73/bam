@@ -14,6 +14,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 import { signupFormSubmit } from "@/lib/actions";
 import { useState } from "react";
+import { isSignupBlocked } from "@/lib/signup-time-check";
 
 export const signupFormSchema = z.object({
   name: z.string().min(2, { error: "Name is required" }).max(50, { error: "Name is too long" }),
@@ -26,6 +27,8 @@ export const oldestDate = new Date(new Date().setFullYear(new Date().getFullYear
 export default function SignUp() {
   const [submitted, setSubmitted] = useState(false);
   const [response, setResponse] = useState<string | null>(null);
+  const signupStatus = isSignupBlocked();
+
   const form = useForm<z.infer<typeof signupFormSchema>>({
     resolver: zodResolver(signupFormSchema),
     defaultValues: {
@@ -35,6 +38,12 @@ export default function SignUp() {
     },
   });
   async function onSubmit(values: z.infer<typeof signupFormSchema>) {
+    // Double-check signup isn't blocked before submitting
+    const currentStatus = isSignupBlocked();
+    if (currentStatus.blocked) {
+      setResponse(currentStatus.message || "Sign-ups are currently closed.");
+      return;
+    }
     setSubmitted(true);
     setResponse(await signupFormSubmit(values));
   }
@@ -109,12 +118,22 @@ export default function SignUp() {
               </FormItem>
             )}
           />
-          <Button type="submit" disabled={submitted}>
+          <Button type="submit" disabled={submitted || signupStatus.blocked}>
             Submit
           </Button>
         </form>
       </Form>
     );
   }
+  // If signup is blocked, show the message
+  if (signupStatus.blocked && !response) {
+    return (
+      <div className="rounded-lg border bg-orange-50 p-6 text-center">
+        <p className="text-lg font-semibold text-orange-900 mb-2">Sign-ups Temporarily Closed</p>
+        <p className="text-orange-800">{signupStatus.message}</p>
+      </div>
+    );
+  }
+
   return response ?? SignupForm();
 }
