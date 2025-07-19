@@ -38,7 +38,7 @@
     "@types/react-dom": "19.1.6",
     "eslint": "9.31.0",
     "eslint-config-next": "15.4.1",
-    "eslint-config-prettier": "10.1.5",
+    "eslint-config-prettier": "10.1.8",
     "postcss": "8.5.6",
     "tailwindcss": "4.1.11",
     "turbo": "2.5.4",
