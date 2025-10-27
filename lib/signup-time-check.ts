@@ -1,17 +1,23 @@
 import eventConfig from "@/event-dates.json";
 
-export function isSignupBlocked(): { blocked: boolean; message?: string } {
-  const now = new Date();
-  const currentDate = now.toISOString().split("T")[0]; // YYYY-MM-DD format
-  const currentTime = now.toTimeString().slice(0, 5); // HH:MM format
+export function isSignupBlocked(currentTime?: Date): { blocked: boolean; message?: string } {
+  const now = currentTime || new Date();
+  const cutoffTime = eventConfig.cutoffTime || "15:00";
+  const blockDurationHours = eventConfig.blockDurationHours || 6;
 
-  // Check if today is an event date
-  const isEventDay = eventConfig.eventDates.includes(currentDate);
+  // Check each event date to see if we're in a block period
+  for (const eventDate of eventConfig.eventDates) {
+    // Parse the event date and cutoff time in local timezone
+    const [year, month, day] = eventDate.split("-").map(Number);
+    const [hours, minutes] = cutoffTime.split(":").map(Number);
+    const blockStart = new Date(year, month - 1, day, hours, minutes, 0, 0);
 
-  if (isEventDay) {
-    // Check if current time is after the cutoff time (default 15:00 / 3pm)
-    const cutoffTime = eventConfig.cutoffTime || "15:00";
-    if (currentTime >= cutoffTime) {
+    // Calculate when the block period ends (using wall-clock hours to handle DST correctly)
+    const blockEnd = new Date(blockStart);
+    blockEnd.setHours(blockStart.getHours() + blockDurationHours);
+
+    // Check if current time is within the block period
+    if (now >= blockStart && now < blockEnd) {
       return {
         blocked: true,
         message: eventConfig.message,
