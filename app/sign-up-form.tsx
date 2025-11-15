@@ -41,7 +41,7 @@ export default function SignUp() {
     // Double-check signup isn't blocked before submitting
     const currentStatus = isSignupBlocked();
     if (currentStatus.blocked) {
-      setResponse(currentStatus.message || "Sign-ups are currently closed.");
+      setResponse(currentStatus.message ?? "Sign-ups are currently closed.");
       return;
     }
     setSubmitted(true);

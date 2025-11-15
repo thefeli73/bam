@@ -1,12 +1,12 @@
 import "server-only";
 
-export type listmonkData = {
+export interface listmonkData {
   email: string;
   name: string;
   status: "enabled" | "blocklisted";
   lists: number[];
   attribs: Record<string, string>;
-};
+}
 
 async function listmonk(data: listmonkData): Promise<string> {
   const listmonkUrl = process.env.LISTMONK_URL ?? "http://localhost:9000/api/";

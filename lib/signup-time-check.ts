@@ -1,7 +1,7 @@
 import eventConfig from "@/event-dates.json";
 
 export function isSignupBlocked(currentTime?: Date): { blocked: boolean; message?: string } {
-  const now = currentTime || new Date();
+  const now = currentTime ?? new Date();
   const cutoffTime = eventConfig.cutoffTime || "15:00";
   const blockDurationHours = eventConfig.blockDurationHours || 6;
 
