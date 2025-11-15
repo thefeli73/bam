@@ -5,7 +5,7 @@ function testScenario(description: string, date: Date, expected: boolean) {
   const result = isSignupBlocked(date);
   const status = result.blocked === expected ? "✅ PASS" : "❌ FAIL";
   console.log(`${status} ${description}`);
-  console.log(`  Expected blocked: ${expected}, Got: ${result.blocked}`);
+  console.log(`  Expected blocked: ${String(expected)}, Got: ${String(result.blocked)}`);
   if (result.message) {
     console.log(`  Message: ${result.message}`);
   }

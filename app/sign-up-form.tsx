@@ -50,6 +50,7 @@ export default function SignUp() {
   function SignupForm() {
     return (
       <Form {...form}>
+        {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
             control={form.control}
@@ -90,8 +91,10 @@ export default function SignUp() {
                     <FormControl>
                       <Button
                         variant={"outline"}
-                        className={cn("w-[240px] pl-3 text-left font-normal", !field.value && "text-muted-foreground")}
+                        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                        className={cn("w-[240px] pl-3 text-left font-normal", field.value && "text-muted-foreground")}
                       >
+                        {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
                         {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
                         <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                       </Button>
