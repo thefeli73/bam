@@ -12,6 +12,9 @@ importers:
 
   .:
     dependencies:
+      '@eslint/js':
+        specifier: ^9.39.1
+        version: 9.39.1
       '@hookform/resolvers':
         specifier: ^5.1.1
         version: 5.2.2(react-hook-form@7.66.0(react@19.2.0))
@@ -109,6 +112,9 @@ importers:
       typescript:
         specifier: 5.9.3
         version: 5.9.3
+      typescript-eslint:
+        specifier: ^8.46.4
+        version: 8.46.4(eslint@9.39.1(jiti@2.6.1))(typescript@5.9.3)
 
 packages:
 

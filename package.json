@@ -6,9 +6,10 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "check": "next lint && npx tsc --noEmit"
+    "lint": "next typegen && eslint . && npx tsc --noEmit"
   },
   "dependencies": {
+    "@eslint/js": "^9.39.1",
     "@hookform/resolvers": "^5.1.1",
     "@radix-ui/react-label": "^2.1.7",
     "@radix-ui/react-popover": "^1.1.14",
@@ -42,7 +43,8 @@
     "postcss": "8.5.6",
     "tailwindcss": "4.1.17",
     "turbo": "2.6.1",
-    "typescript": "5.9.3"
+    "typescript": "5.9.3",
+    "typescript-eslint": "^8.46.4"
   },
   "packageManager": "pnpm@10.21.0",
   "pnpm": {
