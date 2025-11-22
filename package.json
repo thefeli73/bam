@@ -43,7 +43,7 @@
     "tailwindcss": "4.1.17",
     "turbo": "2.6.1",
     "typescript": "5.9.3",
-    "typescript-eslint": "^8.46.4"
+    "typescript-eslint": "^8.47.0"
   },
   "packageManager": "pnpm@10.22.0",
   "pnpm": {
