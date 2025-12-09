@@ -2,7 +2,7 @@
   "eventDates": ["2025-09-05", "2025-10-25", "2025-12-06", "1999-01-01"],
   "cutoffTime": "23:00",
   "blockDurationHours": 6,
-  "message": "Sign-ups are closed for today's event. Please come back tomorrow.",
+  "message": "Sign-ups are closed for today's event.",
 
   "internalComment": "Add event dates in YYYY-MM-DD format. Signups will be disabled after cutoffTime (23:00) for blockDurationHours (6 hours)."
 }
