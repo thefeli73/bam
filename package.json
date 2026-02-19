@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next typegen && eslint . && npx tsc --noEmit"
+    "lint": "next typegen && eslint . && npx tsc --noEmit",
+    "test": "tsx --test"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.1.1",
@@ -41,6 +42,7 @@
     "eslint-config-prettier": "10.1.8",
     "postcss": "8.5.6",
     "tailwindcss": "4.1.18",
+    "tsx": "^4.21.0",
     "typescript": "5.9.3",
     "typescript-eslint": "8.55.0"
   },

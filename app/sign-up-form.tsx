@@ -47,87 +47,7 @@ export default function SignUp() {
     setSubmitted(true);
     setResponse(await signupFormSubmit(values));
   }
-  function SignupForm() {
-    return (
-      <Form {...form}>
-        {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <FormField
-            control={form.control}
-            name="email"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Email</FormLabel>
-                <FormControl>
-                  <Input placeholder="name@example.com" {...field} />
-                </FormControl>
-                <FormDescription>We will contact you here with information about events.</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="Firstname Lastname" {...field} />
-                </FormControl>
-                <FormDescription>Please enter your full name.</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="dob"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Date of birth</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant={"outline"}
-                        // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                        className={cn("w-[240px] pl-3 text-left font-normal", field.value && "text-muted-foreground")}
-                      >
-                        {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
-                        {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      required
-                      mode="single"
-                      showOutsideDays={false}
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      defaultMonth={field.value}
-                      startMonth={oldestDate}
-                      endMonth={youngestDate}
-                      disabled={[{ before: oldestDate }, { after: youngestDate }]}
-                      captionLayout="dropdown"
-                      hideNavigation
-                    />
-                  </PopoverContent>
-                </Popover>
-                <FormDescription>You must be over 20 to sign up.</FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <Button type="submit" disabled={submitted || signupStatus.blocked}>
-            Submit
-          </Button>
-        </form>
-      </Form>
-    );
-  }
+
   // If signup is blocked, show the message
   if (signupStatus.blocked && !response) {
     return (
@@ -138,5 +58,87 @@ export default function SignUp() {
     );
   }
 
-  return response ?? SignupForm();
+  if (response) {
+    return response;
+  }
+
+  return (
+    <Form {...form}>
+      {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input placeholder="name@example.com" {...field} />
+              </FormControl>
+              <FormDescription>We will contact you here with information about events.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input placeholder="Firstname Lastname" {...field} />
+              </FormControl>
+              <FormDescription>Please enter your full name.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="dob"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>Date of birth</FormLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant={"outline"}
+                      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+                      className={cn("w-[240px] pl-3 text-left font-normal", field.value && "text-muted-foreground")}
+                    >
+                      {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
+                      {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
+                      <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    required
+                    mode="single"
+                    showOutsideDays={false}
+                    selected={field.value}
+                    onSelect={field.onChange}
+                    defaultMonth={field.value}
+                    startMonth={oldestDate}
+                    endMonth={youngestDate}
+                    disabled={[{ before: oldestDate }, { after: youngestDate }]}
+                    captionLayout="dropdown"
+                    hideNavigation
+                  />
+                </PopoverContent>
+              </Popover>
+              <FormDescription>You must be over 20 to sign up.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button type="submit" disabled={submitted || signupStatus.blocked}>
+          Submit
+        </Button>
+      </form>
+    </Form>
+  );
 }

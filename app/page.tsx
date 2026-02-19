@@ -1,5 +1,11 @@
 import Image from "next/image";
+import type { Metadata } from "next";
 import SignUp from "./sign-up-form";
+
+export const metadata: Metadata = {
+  title: "Sign up | Bangers and Mash GBG",
+  description: "Sign up to the Bangers and Mash GBG members list.",
+};
 
 export default function Page() {
   return (

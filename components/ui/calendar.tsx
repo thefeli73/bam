@@ -14,16 +14,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-export type CalendarProps = React.ComponentProps<typeof DayPicker>;
+type CalendarProps = React.ComponentProps<typeof DayPicker>;
 
-export function CustomChevron(props: ChevronProps) {
+function CustomChevron(props: ChevronProps) {
   if (props.orientation === "left") {
     return <ChevronLeft className="h-4 w-4" {...props} />;
   }
   return <ChevronRight className="h-4 w-4" {...props} />;
 }
 
-export function CustomSelectDropdown(props: DropdownProps) {
+function CustomSelectDropdown(props: DropdownProps) {
   const { options, value, onChange } = props;
 
   const handleChange = (value: string) => {
