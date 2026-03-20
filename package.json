@@ -52,5 +52,8 @@
       "@types/react": "19.2.14",
       "@types/react-dom": "19.2.3"
     }
-  }
+  },
+  "browserslist": [
+    ">0.5%, last 2 versions, Firefox ESR, not dead"
+  ]
 }
