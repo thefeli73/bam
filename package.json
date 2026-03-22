@@ -6,7 +6,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next typegen && eslint . && npx tsc --noEmit",
+    "lint": "next typegen && PATH=./node_modules/.bin:$PATH oxlint . --deny-warnings --type-aware --type-check && npx tsc --noEmit",
     "test": "tsx --test"
   },
   "dependencies": {
@@ -37,14 +37,12 @@
     "@types/node": "24.12.0",
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
-    "eslint": "9.39.4",
-    "eslint-config-next": "16.2.0",
-    "eslint-config-prettier": "10.1.8",
+    "oxlint": "1.56.0",
+    "oxlint-tsgolint": "0.17.1",
     "postcss": "8.5.8",
     "tailwindcss": "4.2.2",
     "tsx": "4.21.0",
-    "typescript": "5.9.3",
-    "typescript-eslint": "8.57.1"
+    "typescript": "5.9.3"
   },
   "packageManager": "pnpm@10.32.1",
   "pnpm": {
