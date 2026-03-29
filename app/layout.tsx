@@ -24,7 +24,7 @@ export default function RootLayout({
       <head>
         <PlausibleProvider
           domain="signup.bangersandmashgbg.com"
-          customDomain="https://analytics.schulze.network"
+          customDomain="https://plsbl.schulze.network"
           selfHosted={true}
           enabled={true}
         />
