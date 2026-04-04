@@ -20,7 +20,7 @@
     "cssnano": "^7.1.0",
     "date-fns": "^4.1.0",
     "lucide-react": "^1.0.0",
-    "next": "16.2.1",
+    "next": "16.2.2",
     "next-plausible": "^3.12.4",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-preset-env": "^11.0.0",
