@@ -12,6 +12,9 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "Members List - Bangers and Mash",
   description: "Sign up to the Bangers and Mash members list here to join our parties.",
+  appleWebApp: {
+    title: "BAM",
+  },
 };
 
 export default function RootLayout({
@@ -21,17 +24,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth dark">
-      <head>
-        <PlausibleProvider
-          domain="signup.bangersandmashgbg.com"
-          customDomain="https://plsbl.schulze.network"
-          selfHosted={true}
-          enabled={true}
-        />
-        <meta name="apple-mobile-web-app-title" content="BAM" />
-      </head>
       <body className={cn("min-h-screen bg-background font-sans antialiased", inter.variable)}>
-        {children}
+        <PlausibleProvider
+          src="https://plsbl.schulze.network/js/pa-PsVXls0moTgs7mv6uctbO.js"
+          enabled={true}
+        >
+          {children}
+        </PlausibleProvider>
       </body>
     </html>
   );
