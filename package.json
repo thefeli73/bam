@@ -24,9 +24,9 @@
     "next-plausible": "^4.0.0",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-preset-env": "^11.0.0",
-    "react": "19.2.6",
+    "react": "19.2.7",
     "react-day-picker": "^9.8.0",
-    "react-dom": "19.2.6",
+    "react-dom": "19.2.7",
     "react-hook-form": "^7.60.0",
     "tailwind-merge": "^3.3.1",
     "tailwindcss-animate": "^1.0.7",
@@ -35,7 +35,7 @@
   "devDependencies": {
     "@tailwindcss/postcss": "4.3.0",
     "@types/node": "24.12.4",
-    "@types/react": "19.2.15",
+    "@types/react": "19.2.16",
     "@types/react-dom": "19.2.3",
     "oxlint": "1.68.0",
     "oxlint-tsgolint": "0.23.0",
@@ -47,7 +47,7 @@
   "packageManager": "pnpm@11.5.0",
   "pnpm": {
     "overrides": {
-      "@types/react": "19.2.15",
+      "@types/react": "19.2.16",
       "@types/react-dom": "19.2.3"
     }
   },
