@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { ChevronProps, DayPicker, DropdownProps } from "react-day-picker";
+import { type ChevronProps, DayPicker, type DropdownProps } from "@daypicker/react";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
