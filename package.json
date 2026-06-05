@@ -45,12 +45,6 @@
     "typescript": "6.0.3"
   },
   "packageManager": "pnpm@11.5.0",
-  "pnpm": {
-    "overrides": {
-      "@types/react": "19.2.16",
-      "@types/react-dom": "19.2.3"
-    }
-  },
   "browserslist": [
     ">0.5%, last 2 versions, Firefox ESR, not dead"
   ]
