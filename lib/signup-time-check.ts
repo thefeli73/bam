@@ -1,7 +1,24 @@
 import eventConfig from "@/event-dates.json";
+import { z } from "zod";
 
-export function isSignupBlocked(currentTime?: Date): { blocked: boolean; message?: string } {
-  const now = currentTime ?? new Date();
+export type SignupStatus = { blocked: boolean; message?: string };
+
+export const signupFormSchema = z.object({
+  name: z.string().min(2, { error: "Name is required" }).max(50, { error: "Name is too long" }),
+  email: z.email({ error: "Email is invalid" }),
+  dob: z.date({ error: "Birthday is required" }),
+});
+
+export function getSignupDateBounds(currentTime: Date): { youngestDate: Date; oldestDate: Date } {
+  const youngestDate = new Date(currentTime);
+  youngestDate.setFullYear(currentTime.getFullYear() - 20);
+  const oldestDate = new Date(currentTime);
+  oldestDate.setFullYear(currentTime.getFullYear() - 100);
+
+  return { youngestDate, oldestDate };
+}
+
+export function isSignupBlocked(currentTime: Date): SignupStatus {
   const cutoffTime = eventConfig.cutoffTime || "15:00";
   const blockDurationHours = eventConfig.blockDurationHours || 6;
 
@@ -17,7 +34,7 @@ export function isSignupBlocked(currentTime?: Date): { blocked: boolean; message
     blockEnd.setHours(blockStart.getHours() + blockDurationHours);
 
     // Check if current time is within the block period
-    if (now >= blockStart && now < blockEnd) {
+    if (currentTime >= blockStart && currentTime < blockEnd) {
       return {
         blocked: true,
         message: eventConfig.message,

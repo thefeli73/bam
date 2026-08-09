@@ -1,24 +1,35 @@
 "use server";
 
-import { z } from "zod";
-import { oldestDate, signupFormSchema, youngestDate } from "@/app/sign-up-form";
-import listmonk, { listmonkData } from "./listmonk";
+import { getSignupDateBounds, isSignupBlocked, signupFormSchema } from "./signup-time-check";
+import type { listmonkData } from "./listmonk";
 
-export async function signupFormSubmit(data: z.infer<typeof signupFormSchema>): Promise<string> {
-  if (data.dob > youngestDate || data.dob < oldestDate) {
+export async function signupFormSubmit(data: unknown): Promise<string> {
+  const result = signupFormSchema.safeParse(data);
+  if (!result.success) {
+    return "Invalid form submission";
+  }
+  const signup = result.data;
+  const now = new Date();
+  const signupStatus = isSignupBlocked(now);
+  if (signupStatus.blocked) {
+    return signupStatus.message ?? "Sign-ups are currently closed.";
+  }
+  const { oldestDate, youngestDate } = getSignupDateBounds(now);
+  if (signup.dob > youngestDate || signup.dob < oldestDate) {
     return "Invalid date of birth";
   }
-  const offset = data.dob.getTimezoneOffset();
-  data.dob = new Date(data.dob.getTime() - offset * 60 * 1000);
+  const offset = signup.dob.getTimezoneOffset();
+  const dob = new Date(signup.dob.getTime() - offset * 60 * 1000);
 
   const listmonkData: listmonkData = {
-    email: data.email,
-    name: data.name,
+    email: signup.email,
+    name: signup.name,
     status: "enabled",
     lists: [3],
     attribs: {
-      dob: data.dob.toISOString().split("T")[0],
+      dob: dob.toISOString().split("T")[0],
     },
   };
+  const { default: listmonk } = await import("./listmonk");
   return await listmonk(listmonkData);
 }

@@ -1,7 +1,16 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { isSignupBlocked } from "./signup-time-check";
+import { getSignupDateBounds, isSignupBlocked } from "./signup-time-check";
+
+void test("computes signup date bounds 20 and 100 years before current time", () => {
+  const bounds = getSignupDateBounds(new Date(2026, 0, 15, 12));
+
+  assert.deepEqual(bounds, {
+    youngestDate: new Date(2006, 0, 15, 12),
+    oldestDate: new Date(1926, 0, 15, 12),
+  });
+});
 
 void test("allows signups before cutoff", () => {
   const result = isSignupBlocked(new Date("2025-10-25T22:00:00"));

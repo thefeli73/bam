@@ -1,5 +1,8 @@
 import Image from "next/image";
 import type { Metadata } from "next";
+import { io } from "next/cache";
+import { Suspense } from "react";
+import { getSignupDateBounds, isSignupBlocked } from "@/lib/signup-time-check";
 import SignUp from "./sign-up-form";
 
 export const metadata: Metadata = {
@@ -20,7 +23,24 @@ export default function Page() {
         className="mx-auto my-8"
       />
       <h1 className="mb-4 text-xl">Sign up to our members list here</h1>
-      <SignUp />
+      <Suspense fallback={null}>
+        <SignupWithCurrentTime />
+      </Suspense>
     </div>
+  );
+}
+
+async function SignupWithCurrentTime() {
+  await io();
+  const now = new Date();
+  const initialStatus = isSignupBlocked(now);
+  const { oldestDate, youngestDate } = getSignupDateBounds(now);
+
+  return (
+    <SignUp
+      initialStatus={initialStatus}
+      oldestDateIso={oldestDate.toISOString()}
+      youngestDateIso={youngestDate.toISOString()}
+    />
   );
 }

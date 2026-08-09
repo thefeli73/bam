@@ -14,20 +14,19 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 import { signupFormSubmit } from "@/lib/actions";
 import { useState } from "react";
-import { isSignupBlocked } from "@/lib/signup-time-check";
+import { signupFormSchema, type SignupStatus } from "@/lib/signup-time-check";
 
-export const signupFormSchema = z.object({
-  name: z.string().min(2, { error: "Name is required" }).max(50, { error: "Name is too long" }),
-  email: z.email({ error: "Email is invalid" }),
-  dob: z.date({ error: "Birthday is required" }),
-});
-export const youngestDate = new Date(new Date().setFullYear(new Date().getFullYear() - 20));
-export const oldestDate = new Date(new Date().setFullYear(new Date().getFullYear() - 100));
+type SignUpProps = {
+  initialStatus: SignupStatus;
+  oldestDateIso: string;
+  youngestDateIso: string;
+};
 
-export default function SignUp() {
+export default function SignUp({ initialStatus, oldestDateIso, youngestDateIso }: SignUpProps) {
   const [submitted, setSubmitted] = useState(false);
   const [response, setResponse] = useState<string | null>(null);
-  const signupStatus = isSignupBlocked();
+  const oldestDate = new Date(oldestDateIso);
+  const youngestDate = new Date(youngestDateIso);
 
   const form = useForm<z.infer<typeof signupFormSchema>>({
     resolver: zodResolver(signupFormSchema),
@@ -38,22 +37,16 @@ export default function SignUp() {
     },
   });
   async function onSubmit(values: z.infer<typeof signupFormSchema>) {
-    // Double-check signup isn't blocked before submitting
-    const currentStatus = isSignupBlocked();
-    if (currentStatus.blocked) {
-      setResponse(currentStatus.message ?? "Sign-ups are currently closed.");
-      return;
-    }
     setSubmitted(true);
     setResponse(await signupFormSubmit(values));
   }
 
   // If signup is blocked, show the message
-  if (signupStatus.blocked && !response) {
+  if (initialStatus.blocked && !response) {
     return (
       <div className="rounded-lg border bg-orange-50 p-6 text-center">
         <p className="text-lg font-semibold text-orange-900 mb-2">Sign-ups Temporarily Closed</p>
-        <p className="text-orange-800">{signupStatus.message}</p>
+        <p className="text-orange-800">{initialStatus.message}</p>
       </div>
     );
   }
@@ -135,7 +128,7 @@ export default function SignUp() {
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={submitted || signupStatus.blocked}>
+        <Button type="submit" disabled={submitted || initialStatus.blocked}>
           Submit
         </Button>
       </form>
