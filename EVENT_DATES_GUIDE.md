@@ -17,6 +17,7 @@ The sign-up form closes at the configured `cutoffTime` on specified event dates.
   "eventDates": ["2026-05-09", "1999-01-01"],
   "cutoffTime": "23:00",
   "blockDurationHours": 6,
+  "timeZone": "Europe/Stockholm",
   "message": "Sign-ups are closed for today's event. Please come back tomorrow."
 }
 ```
@@ -24,9 +25,9 @@ The sign-up form closes at the configured `cutoffTime` on specified event dates.
 ### Important Notes
 
 - `cutoffTime` sets when the block starts on each event date
-- `blockDurationHours` sets how long sign-ups remain blocked
+- `blockDurationHours` sets how many civil wall-clock hours sign-ups remain blocked
+- `timeZone` must be an IANA time zone name. Event cutoffs and age calendar dates use this time zone
 - Users will see a friendly message when sign-ups are closed
-- The time zone follows the server's local time
 
 ### Adding New Event Dates
 

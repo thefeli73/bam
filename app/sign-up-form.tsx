@@ -6,7 +6,7 @@ import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { format } from "date-fns";
+import { format, parseISO } from "date-fns";
 import { CalendarIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
@@ -14,7 +14,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 import { signupFormSubmit } from "@/lib/actions";
 import { useState } from "react";
-import { signupFormSchema, type SignupStatus } from "@/lib/signup-time-check";
+import { signupFormClientSchema, type SignupStatus } from "@/lib/signup-time-check";
 
 type SignUpProps = {
   initialStatus: SignupStatus;
@@ -25,20 +25,20 @@ type SignUpProps = {
 export default function SignUp({ initialStatus, oldestDateIso, youngestDateIso }: SignUpProps) {
   const [submitted, setSubmitted] = useState(false);
   const [response, setResponse] = useState<string | null>(null);
-  const oldestDate = new Date(oldestDateIso);
-  const youngestDate = new Date(youngestDateIso);
+  const oldestDate = parseISO(oldestDateIso);
+  const youngestDate = parseISO(youngestDateIso);
 
-  const form = useForm<z.infer<typeof signupFormSchema>>({
-    resolver: zodResolver(signupFormSchema),
+  const form = useForm<z.infer<typeof signupFormClientSchema>>({
+    resolver: zodResolver(signupFormClientSchema),
     defaultValues: {
       name: "",
       email: "",
       dob: undefined,
     },
   });
-  async function onSubmit(values: z.infer<typeof signupFormSchema>) {
+  async function onSubmit(values: z.infer<typeof signupFormClientSchema>) {
     setSubmitted(true);
-    setResponse(await signupFormSubmit(values));
+    setResponse(await signupFormSubmit({ ...values, dob: format(values.dob, "yyyy-MM-dd") }));
   }
 
   // If signup is blocked, show the message
@@ -97,6 +97,7 @@ export default function SignUp({ initialStatus, oldestDateIso, youngestDateIso }
                 <PopoverTrigger asChild>
                   <FormControl>
                     <Button
+                      type="button"
                       variant={"outline"}
                       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
                       className={cn("w-[240px] pl-3 text-left font-normal", field.value && "text-muted-foreground")}
@@ -123,7 +124,7 @@ export default function SignUp({ initialStatus, oldestDateIso, youngestDateIso }
                   />
                 </PopoverContent>
               </Popover>
-              <FormDescription>You must be over 20 to sign up.</FormDescription>
+              <FormDescription>You must be at least 20 to sign up.</FormDescription>
               <FormMessage />
             </FormItem>
           )}

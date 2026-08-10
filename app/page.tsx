@@ -36,11 +36,5 @@ async function SignupWithCurrentTime() {
   const initialStatus = isSignupBlocked(now);
   const { oldestDate, youngestDate } = getSignupDateBounds(now);
 
-  return (
-    <SignUp
-      initialStatus={initialStatus}
-      oldestDateIso={oldestDate.toISOString()}
-      youngestDateIso={youngestDate.toISOString()}
-    />
-  );
+  return <SignUp initialStatus={initialStatus} oldestDateIso={oldestDate} youngestDateIso={youngestDate} />;
 }

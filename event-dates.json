@@ -2,6 +2,7 @@
   "eventDates": ["2026-05-09", "1999-01-01"],
   "cutoffTime": "23:00",
   "blockDurationHours": 6,
+  "timeZone": "Europe/Stockholm",
   "message": "Sign-ups are closed for today's event.",
 
   "internalComment": "Add event dates in YYYY-MM-DD format. Signups will be disabled after cutoffTime (23:00) for blockDurationHours (6 hours)."

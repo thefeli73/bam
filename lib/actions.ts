@@ -1,6 +1,6 @@
 "use server";
 
-import { getSignupDateBounds, isSignupBlocked, signupFormSchema } from "./signup-time-check";
+import { isSignupBlocked, isSignupDateOfBirthAllowed, signupFormSchema } from "./signup-time-check";
 import type { listmonkData } from "./listmonk";
 
 export async function signupFormSubmit(data: unknown): Promise<string> {
@@ -14,12 +14,9 @@ export async function signupFormSubmit(data: unknown): Promise<string> {
   if (signupStatus.blocked) {
     return signupStatus.message ?? "Sign-ups are currently closed.";
   }
-  const { oldestDate, youngestDate } = getSignupDateBounds(now);
-  if (signup.dob > youngestDate || signup.dob < oldestDate) {
+  if (!isSignupDateOfBirthAllowed(signup.dob, now)) {
     return "Invalid date of birth";
   }
-  const offset = signup.dob.getTimezoneOffset();
-  const dob = new Date(signup.dob.getTime() - offset * 60 * 1000);
 
   const listmonkData: listmonkData = {
     email: signup.email,
@@ -27,7 +24,7 @@ export async function signupFormSubmit(data: unknown): Promise<string> {
     status: "enabled",
     lists: [3],
     attribs: {
-      dob: dob.toISOString().split("T")[0],
+      dob: signup.dob,
     },
   };
   const { default: listmonk } = await import("./listmonk");
