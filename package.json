@@ -8,8 +8,9 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
-    "lint": "next typegen && PATH=./node_modules/.bin:$PATH oxlint . --deny-warnings --type-aware --type-check && npx tsc --noEmit",
+    "postbuild": "cp -r public .next/standalone/ && cp -r .next/static .next/standalone/.next/",
+    "start": "node .next/standalone/server.js",
+    "lint": "next typegen && PATH=./node_modules/.bin:$PATH oxlint . --deny-warnings --type-aware --type-check && tsc --noEmit",
     "test": "tsx --test"
   },
   "dependencies": {

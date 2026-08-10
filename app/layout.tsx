@@ -27,7 +27,6 @@ export default function RootLayout({
       <body className={cn("min-h-screen bg-background font-sans antialiased", inter.variable)}>
         <PlausibleProvider
           src="https://plsbl.schulze.network/js/pa-PsVXls0moTgs7mv6uctbO.js"
-          enabled={true}
         >
           {children}
         </PlausibleProvider>

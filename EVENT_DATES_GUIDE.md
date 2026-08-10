@@ -2,7 +2,7 @@
 
 ## How to Block Sign-ups on Event Days
 
-The sign-up form automatically closes at 3pm on specified event dates to prevent last-minute registrations.
+The sign-up form closes at the configured `cutoffTime` on specified event dates. It reopens after the configured `blockDurationHours`.
 
 ### Managing Event Dates
 
@@ -14,16 +14,17 @@ The sign-up form automatically closes at 3pm on specified event dates to prevent
 
 ```json
 {
-  "eventDates": ["2025-09-05", "1999-01-01"],
-  "cutoffTime": "15:00",
+  "eventDates": ["2026-05-09", "1999-01-01"],
+  "cutoffTime": "23:00",
+  "blockDurationHours": 6,
   "message": "Sign-ups are closed for today's event. Please come back tomorrow."
 }
 ```
 
 ### Important Notes
 
-- The cutoff time is set to 3pm (15:00) by default
-- Sign-ups will automatically reopen at midnight after an event day
+- `cutoffTime` sets when the block starts on each event date
+- `blockDurationHours` sets how long sign-ups remain blocked
 - Users will see a friendly message when sign-ups are closed
 - The time zone follows the server's local time
 
