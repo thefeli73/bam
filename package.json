@@ -2,16 +2,15 @@
   "name": "bam",
   "version": "0.1.0",
   "private": true,
-  "engines": {
-    "node": "24.x"
-  },
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "postbuild": "cp -r public .next/standalone/ && cp -r .next/static .next/standalone/.next/",
     "start": "node .next/standalone/server.js",
     "lint": "next typegen && PATH=./node_modules/.bin:$PATH oxlint . --deny-warnings --type-aware --type-check && tsc --noEmit",
-    "test": "tsx --test"
+    "test": "tsx --test",
+    "format": "oxfmt --write",
+    "format:check": "oxfmt --check"
   },
   "dependencies": {
     "@daypicker/react": "^10.0.1",
@@ -41,6 +40,7 @@
     "@types/node": "24.13.3",
     "@types/react": "19.2.18",
     "@types/react-dom": "19.2.4",
+    "oxfmt": "0.62.0",
     "oxlint": "1.77.0",
     "oxlint-tsgolint": "7.0.2001",
     "postcss": "8.5.26",
@@ -48,8 +48,11 @@
     "tsx": "4.23.11",
     "typescript": "7.0.2"
   },
-  "packageManager": "pnpm@11.20.0",
   "browserslist": [
     ">0.5%, last 2 versions, Firefox ESR, not dead"
-  ]
+  ],
+  "engines": {
+    "node": "24.x"
+  },
+  "packageManager": "pnpm@11.20.0"
 }

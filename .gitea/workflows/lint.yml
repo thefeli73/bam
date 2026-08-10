@@ -26,6 +26,9 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --prefer-offline --store-dir /tmp/pnpm-store
 
+      - name: Check formatting
+        run: pnpm run format:check
+
       - name: Test
         run: pnpm test
 

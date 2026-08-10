@@ -25,9 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth dark">
       <body className={cn("min-h-screen bg-background font-sans antialiased", inter.variable)}>
-        <PlausibleProvider
-          src="https://plsbl.schulze.network/js/pa-PsVXls0moTgs7mv6uctbO.js"
-        >
+        <PlausibleProvider src="https://plsbl.schulze.network/js/pa-PsVXls0moTgs7mv6uctbO.js">
           {children}
         </PlausibleProvider>
       </body>
