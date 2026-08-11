@@ -30,6 +30,7 @@ export default function SignUp({ initialStatus, oldestDateIso, youngestDateIso }
   const [cooldownMinutes, setCooldownMinutes] = useState<number | null>(null);
   const resultRef = useRef<HTMLDivElement>(null);
   const dobTriggerRef = useRef<HTMLButtonElement>(null);
+  const focusEmailAfterResetRef = useRef(false);
   const oldestDate = parseISO(oldestDateIso);
   const youngestDate = parseISO(youngestDateIso);
 
@@ -75,9 +76,25 @@ export default function SignUp({ initialStatus, oldestDateIso, youngestDateIso }
     }
   }
 
+  function resetForm() {
+    focusEmailAfterResetRef.current = true;
+    form.reset();
+    setDobOpen(false);
+    setResponse(null);
+    setCooldownUntil(null);
+    setCooldownMinutes(null);
+  }
+
   useEffect(() => {
     if (response) resultRef.current?.focus();
   }, [response]);
+
+  useEffect(() => {
+    if (!response && focusEmailAfterResetRef.current) {
+      focusEmailAfterResetRef.current = false;
+      form.setFocus("email");
+    }
+  }, [form, response]);
 
   useEffect(() => {
     if (cooldownUntil === null) return;
@@ -124,9 +141,14 @@ export default function SignUp({ initialStatus, oldestDateIso, youngestDateIso }
 
   if (response?.status === "success") {
     return (
-      // eslint-disable-next-line jsx-a11y/prefer-tag-over-role -- The shared focus target is a result region, not a form output value.
-      <div ref={resultRef} role="status" aria-live="polite" tabIndex={-1}>
-        {response.message}
+      <div className="flex flex-col items-start gap-4">
+        {/* eslint-disable-next-line jsx-a11y/prefer-tag-over-role -- The shared focus target is a result region, not a form output value. */}
+        <div ref={resultRef} role="status" aria-live="polite" tabIndex={-1}>
+          {response.message}
+        </div>
+        <Button type="button" variant="outline" onClick={resetForm}>
+          Go back
+        </Button>
       </div>
     );
   }
@@ -134,10 +156,15 @@ export default function SignUp({ initialStatus, oldestDateIso, youngestDateIso }
   return (
     <Form {...form}>
       {response && (
-        <div ref={resultRef} role="alert" tabIndex={-1} className="mb-8 text-sm font-medium text-destructive-text">
-          {response.status === "rate-limited" && cooldownLabel
-            ? `Too many signup attempts. Try again in ${cooldownLabel}.`
-            : response.message}
+        <div className="mb-8 flex flex-col items-start gap-4">
+          <div ref={resultRef} role="alert" tabIndex={-1} className="text-sm font-medium text-destructive-text">
+            {response.status === "rate-limited" && cooldownLabel
+              ? `Too many signup attempts. Try again in ${cooldownLabel}.`
+              : response.message}
+          </div>
+          <Button type="button" variant="outline" onClick={resetForm}>
+            Go back
+          </Button>
         </div>
       )}
       {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
@@ -147,7 +174,7 @@ export default function SignUp({ initialStatus, oldestDateIso, youngestDateIso }
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email (required)</FormLabel>
+              <FormLabel>Email</FormLabel>
               <FormControl>
                 <Input
                   type="email"
@@ -168,7 +195,7 @@ export default function SignUp({ initialStatus, oldestDateIso, youngestDateIso }
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name (required)</FormLabel>
+              <FormLabel>Name</FormLabel>
               <FormControl>
                 <Input autoComplete="name" required maxLength={50} placeholder="Firstname Lastname" {...field} />
               </FormControl>
@@ -182,7 +209,7 @@ export default function SignUp({ initialStatus, oldestDateIso, youngestDateIso }
           name="dob"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>Date of birth (required)</FormLabel>
+              <FormLabel>Date of birth</FormLabel>
               <Popover open={dobOpen} onOpenChange={setDobOpen}>
                 <PopoverTrigger asChild>
                   <FormControl>
@@ -237,7 +264,7 @@ export default function SignUp({ initialStatus, oldestDateIso, youngestDateIso }
                   />
                 </PopoverContent>
               </Popover>
-              <FormDescription>You must be between 20 and 100 years old to sign up.</FormDescription>
+              <FormDescription>You must be at least 20 to sign up.</FormDescription>
               <FormMessage />
             </FormItem>
           )}

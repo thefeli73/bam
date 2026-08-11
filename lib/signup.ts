@@ -52,7 +52,10 @@ export async function submitSignup(data: unknown, dependencies: SignupDependenci
       attribs: { dob: result.data.dob },
     });
     return subscribed.ok
-      ? { status: "success", message: "Thanks for signing up! Please check your email for a confirmation." }
+      ? {
+          status: "success",
+          message: "Thanks for signing up! Please check your inbox and junk folder for a confirmation email.",
+        }
       : { status: "error", message: GENERIC_ERROR };
   } catch {
     return { status: "error", message: GENERIC_ERROR };
