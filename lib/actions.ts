@@ -1,32 +1,18 @@
 "use server";
 
-import { isSignupBlocked, isSignupDateOfBirthAllowed, signupFormSchema } from "./signup-time-check";
-import type { listmonkData } from "./listmonk";
+import { headers } from "next/headers";
 
-export async function signupFormSubmit(data: unknown): Promise<string> {
-  const result = signupFormSchema.safeParse(data);
-  if (!result.success) {
-    return "Invalid form submission";
-  }
-  const signup = result.data;
-  const now = new Date();
-  const signupStatus = isSignupBlocked(now);
-  if (signupStatus.blocked) {
-    return signupStatus.message ?? "Sign-ups are currently closed.";
-  }
-  if (!isSignupDateOfBirthAllowed(signup.dob, now)) {
-    return "Invalid date of birth";
-  }
+import { submitSignup, type SignupResult } from "./signup";
+import { checkSignupRateLimit, getForwardedClientIp } from "./signup-rate-limit";
 
-  const listmonkData: listmonkData = {
-    email: signup.email,
-    name: signup.name,
-    status: "enabled",
-    lists: [3],
-    attribs: {
-      dob: signup.dob,
+export async function signupFormSubmit(data: unknown): Promise<SignupResult> {
+  return submitSignup(data, {
+    now: new Date(),
+    getClientIp: async () => getForwardedClientIp((await headers()).get("x-forwarded-for")),
+    checkRateLimit: checkSignupRateLimit,
+    subscribe: async (payload) => {
+      const { default: listmonk } = await import("./listmonk");
+      return listmonk(payload);
     },
-  };
-  const { default: listmonk } = await import("./listmonk");
-  return await listmonk(listmonkData);
+  });
 }

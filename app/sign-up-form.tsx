@@ -38,7 +38,8 @@ export default function SignUp({ initialStatus, oldestDateIso, youngestDateIso }
   });
   async function onSubmit(values: z.infer<typeof signupFormClientSchema>) {
     setSubmitted(true);
-    setResponse(await signupFormSubmit({ ...values, dob: format(values.dob, "yyyy-MM-dd") }));
+    const result = await signupFormSubmit({ ...values, dob: format(values.dob, "yyyy-MM-dd") });
+    setResponse(result.message);
   }
 
   // If signup is blocked, show the message
