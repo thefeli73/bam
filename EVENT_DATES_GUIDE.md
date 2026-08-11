@@ -34,13 +34,9 @@ The sign-up form closes at the configured `cutoffTime` on specified event dates.
 Simply add a new date to the array:
 
 ```json
-"eventDates": [
-  "2024-12-25",
-  "2024-12-31",
-  "2025-01-15",
-  "2025-02-14",
-  "2025-03-20"  // <- New date added
-]
+{
+  "eventDates": ["2024-12-25", "2024-12-31", "2025-01-15", "2025-02-14", "2025-03-20"]
+}
 ```
 
-Remember to save the file after making changes!
+Save the file, rebuild the application, and redeploy it so the new configuration is included in the production artifact.
