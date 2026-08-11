@@ -17,21 +17,16 @@ function CustomChevron(props: ChevronProps) {
   return <ChevronRight className="h-4 w-4" {...props} />;
 }
 
-function CustomSelectDropdown(props: DropdownProps) {
-  const { options, value, onChange } = props;
-
-  const handleChange = (value: string) => {
+function CustomSelectDropdown({ options, value, onChange, disabled, "aria-label": ariaLabel }: DropdownProps) {
+  const handleChange = (nextValue: string) => {
     if (onChange) {
-      const changeEvent = {
-        target: { value: value },
-      } as React.ChangeEvent<HTMLSelectElement>;
-      onChange(changeEvent);
+      onChange({ target: { value: nextValue } } as React.ChangeEvent<HTMLSelectElement>);
     }
   };
 
   return (
-    <Select value={value?.toString()} onValueChange={handleChange}>
-      <SelectTrigger className="inline-flex w-2/5 mx-2 mt-2">
+    <Select value={value?.toString()} onValueChange={handleChange} disabled={disabled}>
+      <SelectTrigger aria-label={ariaLabel} className="mx-2 mt-2 inline-flex w-2/5">
         <SelectValue />
       </SelectTrigger>
       <SelectContent position="popper">

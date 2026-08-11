@@ -1,20 +1,21 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { format, parseISO } from "date-fns";
+import { CalendarIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { format, parseISO } from "date-fns";
-import { CalendarIcon } from "lucide-react";
-import { Input } from "@/components/ui/input";
 import { Calendar } from "@/components/ui/calendar";
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
 import { signupFormSubmit } from "@/lib/actions";
-import { useState } from "react";
+import type { SignupResult } from "@/lib/signup";
 import { signupFormClientSchema, type SignupStatus } from "@/lib/signup-time-check";
+import { cn } from "@/lib/utils";
 
 type SignUpProps = {
   initialStatus: SignupStatus;
@@ -23,8 +24,12 @@ type SignUpProps = {
 };
 
 export default function SignUp({ initialStatus, oldestDateIso, youngestDateIso }: SignUpProps) {
-  const [submitted, setSubmitted] = useState(false);
-  const [response, setResponse] = useState<string | null>(null);
+  const [response, setResponse] = useState<SignupResult | null>(null);
+  const [dobOpen, setDobOpen] = useState(false);
+  const [cooldownUntil, setCooldownUntil] = useState<number | null>(null);
+  const [cooldownMinutes, setCooldownMinutes] = useState<number | null>(null);
+  const resultRef = useRef<HTMLDivElement>(null);
+  const dobTriggerRef = useRef<HTMLButtonElement>(null);
   const oldestDate = parseISO(oldestDateIso);
   const youngestDate = parseISO(youngestDateIso);
 
@@ -36,38 +41,122 @@ export default function SignUp({ initialStatus, oldestDateIso, youngestDateIso }
       dob: undefined,
     },
   });
+  const pending = form.formState.isSubmitting;
+
   async function onSubmit(values: z.infer<typeof signupFormClientSchema>) {
-    setSubmitted(true);
-    const result = await signupFormSubmit({ ...values, dob: format(values.dob, "yyyy-MM-dd") });
-    setResponse(result.message);
+    setResponse(null);
+    try {
+      const result = await signupFormSubmit({ ...values, dob: format(values.dob, "yyyy-MM-dd") });
+      const retryAfterMs = result.status === "rate-limited" ? result.retryAfterSeconds * 1000 : 0;
+      const now = Date.now();
+      const deadline = now + retryAfterMs;
+
+      if (
+        result.status === "rate-limited" &&
+        Number.isSafeInteger(result.retryAfterSeconds) &&
+        result.retryAfterSeconds > 0 &&
+        Number.isSafeInteger(retryAfterMs) &&
+        Number.isSafeInteger(deadline)
+      ) {
+        setCooldownUntil(deadline);
+        setCooldownMinutes(Math.ceil(result.retryAfterSeconds / 60));
+      } else {
+        setCooldownUntil(null);
+        setCooldownMinutes(null);
+      }
+      setResponse(result);
+    } catch {
+      setCooldownUntil(null);
+      setCooldownMinutes(null);
+      setResponse({
+        status: "error",
+        message: "An error occurred while trying to sign up. Please try again.",
+      });
+    }
   }
 
-  // If signup is blocked, show the message
+  useEffect(() => {
+    if (response) resultRef.current?.focus();
+  }, [response]);
+
+  useEffect(() => {
+    if (cooldownUntil === null) return;
+
+    let timeoutId: number;
+    const updateCooldown = () => {
+      const remainingMs = cooldownUntil - Date.now();
+      if (remainingMs <= 0) {
+        setCooldownUntil(null);
+        setCooldownMinutes(null);
+        setResponse((current) => (current?.status === "rate-limited" ? null : current));
+        return;
+      }
+
+      const remainingMinutes = Math.ceil(remainingMs / 60_000);
+      setCooldownMinutes(remainingMinutes);
+      const untilNextMinute = remainingMs - (remainingMinutes - 1) * 60_000;
+      timeoutId = window.setTimeout(updateCooldown, untilNextMinute);
+    };
+
+    updateCooldown();
+    return () => window.clearTimeout(timeoutId);
+  }, [cooldownUntil]);
+
+  const cooldownLabel = cooldownMinutes ? `${cooldownMinutes} ${cooldownMinutes === 1 ? "minute" : "minutes"}` : null;
+
   if (initialStatus.blocked && !response) {
     return (
       <div className="rounded-lg border bg-orange-50 p-6 text-center">
-        <p className="text-lg font-semibold text-orange-900 mb-2">Sign-ups Temporarily Closed</p>
+        <h2 className="mb-2 text-lg font-semibold text-orange-900">Sign-ups Temporarily Closed</h2>
         <p className="text-orange-800">{initialStatus.message}</p>
       </div>
     );
   }
 
-  if (response) {
-    return response;
+  if (response?.status === "blocked") {
+    return (
+      <div ref={resultRef} aria-live="polite" tabIndex={-1} className="rounded-lg border bg-orange-50 p-6 text-center">
+        <h2 className="mb-2 text-lg font-semibold text-orange-900">Sign-ups Temporarily Closed</h2>
+        <p className="text-orange-800">{response.message}</p>
+      </div>
+    );
+  }
+
+  if (response?.status === "success") {
+    return (
+      // eslint-disable-next-line jsx-a11y/prefer-tag-over-role -- The shared focus target is a result region, not a form output value.
+      <div ref={resultRef} role="status" aria-live="polite" tabIndex={-1}>
+        {response.message}
+      </div>
+    );
   }
 
   return (
     <Form {...form}>
+      {response && (
+        <div ref={resultRef} role="alert" tabIndex={-1} className="mb-8 text-sm font-medium text-destructive-text">
+          {response.status === "rate-limited" && cooldownLabel
+            ? `Too many signup attempts. Try again in ${cooldownLabel}.`
+            : response.message}
+        </div>
+      )}
       {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form method="post" onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Email (required)</FormLabel>
               <FormControl>
-                <Input placeholder="name@example.com" {...field} />
+                <Input
+                  type="email"
+                  autoComplete="email"
+                  required
+                  maxLength={254}
+                  placeholder="name@example.com"
+                  {...field}
+                />
               </FormControl>
               <FormDescription>We will contact you here with information about events.</FormDescription>
               <FormMessage />
@@ -79,9 +168,9 @@ export default function SignUp({ initialStatus, oldestDateIso, youngestDateIso }
           name="name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Name</FormLabel>
+              <FormLabel>Name (required)</FormLabel>
               <FormControl>
-                <Input placeholder="Firstname Lastname" {...field} />
+                <Input autoComplete="name" required maxLength={50} placeholder="Firstname Lastname" {...field} />
               </FormControl>
               <FormDescription>Please enter your full name.</FormDescription>
               <FormMessage />
@@ -93,29 +182,52 @@ export default function SignUp({ initialStatus, oldestDateIso, youngestDateIso }
           name="dob"
           render={({ field }) => (
             <FormItem className="flex flex-col">
-              <FormLabel>Date of birth</FormLabel>
-              <Popover>
+              <FormLabel>Date of birth (required)</FormLabel>
+              <Popover open={dobOpen} onOpenChange={setDobOpen}>
                 <PopoverTrigger asChild>
                   <FormControl>
                     <Button
+                      ref={(element) => {
+                        field.ref(element);
+                        dobTriggerRef.current = element;
+                      }}
                       type="button"
-                      variant={"outline"}
-                      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-                      className={cn("w-[240px] pl-3 text-left font-normal", field.value && "text-muted-foreground")}
+                      variant="outline"
+                      aria-label={
+                        field.value
+                          ? `Date of birth (required): ${format(field.value, "PPP")}. Change date`
+                          : "Date of birth (required): Pick a date"
+                      }
+                      className={cn(
+                        "w-full pl-3 text-left font-normal sm:w-[240px]",
+                        !field.value && "text-muted-foreground",
+                      )}
                     >
-                      {/* eslint-disable-next-line @typescript-eslint/no-unnecessary-condition */}
                       {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}
                       <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                     </Button>
                   </FormControl>
                 </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
+                <PopoverContent
+                  aria-label="Choose date of birth"
+                  className="max-h-[calc(100vh-2rem)] w-auto max-w-[calc(100vw-2rem)] overflow-auto p-0"
+                  align="start"
+                  onCloseAutoFocus={(event) => {
+                    event.preventDefault();
+                    dobTriggerRef.current?.focus();
+                  }}
+                >
                   <Calendar
                     required
                     mode="single"
                     showOutsideDays={false}
                     selected={field.value}
-                    onSelect={field.onChange}
+                    onSelect={(date) => {
+                      if (date) {
+                        field.onChange(date);
+                        setDobOpen(false);
+                      }
+                    }}
                     defaultMonth={field.value}
                     startMonth={oldestDate}
                     endMonth={youngestDate}
@@ -125,13 +237,13 @@ export default function SignUp({ initialStatus, oldestDateIso, youngestDateIso }
                   />
                 </PopoverContent>
               </Popover>
-              <FormDescription>You must be at least 20 to sign up.</FormDescription>
+              <FormDescription>You must be between 20 and 100 years old to sign up.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit" disabled={submitted || initialStatus.blocked}>
-          Submit
+        <Button type="submit" disabled={pending || cooldownUntil !== null || initialStatus.blocked}>
+          {pending ? "Submitting…" : cooldownLabel ? `Try again in ${cooldownLabel}` : "Submit"}
         </Button>
       </form>
     </Form>
