@@ -17,13 +17,18 @@ import type { SignupResult } from "@/lib/signup";
 import { signupFormClientSchema, type SignupStatus } from "@/lib/signup-time-check";
 import { cn } from "@/lib/utils";
 
+import { useSignupAnalytics } from "./use-signup-analytics";
+
 type SignUpProps = {
   initialStatus: SignupStatus;
   oldestDateIso: string;
   youngestDateIso: string;
 };
 
+type SignupFormValues = z.infer<typeof signupFormClientSchema>;
+
 export default function SignUp({ initialStatus, oldestDateIso, youngestDateIso }: SignUpProps) {
+  const analytics = useSignupAnalytics(initialStatus.blocked);
   const [response, setResponse] = useState<SignupResult | null>(null);
   const [dobOpen, setDobOpen] = useState(false);
   const [cooldownUntil, setCooldownUntil] = useState<number | null>(null);
@@ -34,7 +39,7 @@ export default function SignUp({ initialStatus, oldestDateIso, youngestDateIso }
   const oldestDate = parseISO(oldestDateIso);
   const youngestDate = parseISO(youngestDateIso);
 
-  const form = useForm<z.infer<typeof signupFormClientSchema>>({
+  const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupFormClientSchema),
     defaultValues: {
       name: "",
@@ -44,10 +49,12 @@ export default function SignUp({ initialStatus, oldestDateIso, youngestDateIso }
   });
   const pending = form.formState.isSubmitting;
 
-  async function onSubmit(values: z.infer<typeof signupFormClientSchema>) {
+  async function onSubmit(values: SignupFormValues) {
     setResponse(null);
     try {
+      analytics.trackSubmitted();
       const result = await signupFormSubmit({ ...values, dob: format(values.dob, "yyyy-MM-dd") });
+      analytics.trackResult(result);
       const retryAfterMs = result.status === "rate-limited" ? result.retryAfterSeconds * 1000 : 0;
       const now = Date.now();
       const deadline = now + retryAfterMs;
@@ -67,6 +74,7 @@ export default function SignUp({ initialStatus, oldestDateIso, youngestDateIso }
       }
       setResponse(result);
     } catch {
+      analytics.trackServerError();
       setCooldownUntil(null);
       setCooldownMinutes(null);
       setResponse({
@@ -168,7 +176,13 @@ export default function SignUp({ initialStatus, oldestDateIso, youngestDateIso }
         </div>
       )}
       {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
-      <form method="post" onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form
+        method="post"
+        onFocusCapture={analytics.trackStarted}
+        onInvalidCapture={analytics.trackNativeInvalid}
+        onSubmit={form.handleSubmit(onSubmit, analytics.trackValidationFailed)}
+        className="space-y-8"
+      >
         <FormField
           control={form.control}
           name="email"
