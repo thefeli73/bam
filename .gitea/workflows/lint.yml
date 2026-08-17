@@ -37,3 +37,12 @@ jobs:
 
       - name: Build
         run: pnpm run build
+
+      - name: Check standalone server starts
+        run: |
+          if timeout --signal=TERM 2s pnpm start; then
+            echo "Standalone server exited unexpectedly"
+            exit 1
+          else
+            test "$?" -eq 124
+          fi
