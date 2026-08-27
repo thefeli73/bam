@@ -1,5 +1,5 @@
 {
-  "eventDates": ["2026-05-09", "1999-01-01"],
+  "eventDates": ["2026-08-29", "2026-05-09", "1999-01-01"],
   "cutoffTime": "23:00",
   "blockDurationHours": 6,
   "timeZone": "Europe/Stockholm",
