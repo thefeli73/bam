@@ -56,6 +56,7 @@ export default function SignUp({ initialStatus, oldestDateIso, youngestDateIso }
       const result = await signupFormSubmit({ ...values, dob: format(values.dob, "yyyy-MM-dd") });
       analytics.trackResult(result);
       const retryAfterMs = result.status === "rate-limited" ? result.retryAfterSeconds * 1000 : 0;
+      // eslint-disable-next-line react/purity -- Submit handlers run after render and need current wall-clock time.
       const now = Date.now();
       const deadline = now + retryAfterMs;
 
