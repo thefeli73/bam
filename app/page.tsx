@@ -22,8 +22,14 @@ export default function Page() {
         height={200}
         className="mx-auto my-8"
       />
-      <h1 className="mb-4 text-xl">Sign up to our members list here</h1>
-      <Suspense fallback={null}>
+      <Suspense
+        fallback={
+          <div className="mb-4">
+            <h1 className="text-xl">Join the Bangers &amp; Mash members list</h1>
+            <p className="mt-1 text-sm text-muted-foreground">Get party dates and updates straight to your inbox.</p>
+          </div>
+        }
+      >
         <SignupWithCurrentTime />
       </Suspense>
     </div>

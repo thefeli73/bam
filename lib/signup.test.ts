@@ -94,7 +94,8 @@ void test("normalizes input and transports the exact date of birth", async () =>
     await submitSignup({ ...validSignup, name: "  Test Person  ", email: "  TEST@EXAMPLE.COM  " }, dependencies),
     {
       status: "success",
-      message: "Thanks for signing up! Please check your inbox and junk folder for a confirmation email.",
+      message:
+        "If your subscription still needs confirming, we’ve sent you a confirmation email. Check your inbox, junk, or spam folder if you don’t see it.",
     },
   );
   assert.deepEqual(payloads, [

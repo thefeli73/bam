@@ -232,19 +232,19 @@ void test("escapes regex metacharacters in the exact email search", async () => 
   assert.equal(request.requests[1].url.searchParams.get("search"), "^person\\+tag\\.test@example\\.com$");
 });
 
-void test("rejects disabled and blocklisted duplicates", async () => {
+void test("reports disabled and blocklisted duplicates as success", async () => {
   const { default: listmonk } = await listmonkModule;
   for (const status of ["disabled", "blocklisted"]) {
     const request = recordFetch([
       new Response(null, { status: 409 }),
       jsonResponse({ data: { results: [subscriber({ status })] } }),
     ]);
-    assert.deepEqual(await listmonk(data, { env: productionEnv(), fetch: request.fetch }), { ok: false });
+    assert.deepEqual(await listmonk(data, { env: productionEnv(), fetch: request.fetch }), { ok: true });
     assert.equal(request.requests.length, 2);
   }
 });
 
-void test("rejects malformed, ambiguous, and unknown duplicate state", async () => {
+void test("reports malformed, ambiguous, and unknown duplicate state as success", async () => {
   const { default: listmonk } = await listmonkModule;
   const lookups = [
     {},
@@ -260,12 +260,12 @@ void test("rejects malformed, ambiguous, and unknown duplicate state", async () 
 
   for (const lookup of lookups) {
     const request = recordFetch([new Response(null, { status: 409 }), jsonResponse(lookup)]);
-    assert.deepEqual(await listmonk(data, { env: productionEnv(), fetch: request.fetch }), { ok: false });
+    assert.deepEqual(await listmonk(data, { env: productionEnv(), fetch: request.fetch }), { ok: true });
     assert.equal(request.requests.length, 2);
   }
 });
 
-void test("rejects an unknown status on a non-target membership", async () => {
+void test("reports an unknown status on a non-target membership as success", async () => {
   const { default: listmonk } = await listmonkModule;
   const request = recordFetch([
     new Response(null, { status: 409 }),
@@ -283,7 +283,7 @@ void test("rejects an unknown status on a non-target membership", async () => {
     }),
   ]);
 
-  assert.deepEqual(await listmonk(data, { env: productionEnv(), fetch: request.fetch }), { ok: false });
+  assert.deepEqual(await listmonk(data, { env: productionEnv(), fetch: request.fetch }), { ok: true });
   assert.equal(request.requests.length, 2);
 });
 
@@ -305,7 +305,7 @@ void test("returns a generic failure for non-409 and network responses", async (
   );
 });
 
-void test("stops when any duplicate recovery request fails", async () => {
+void test("reports duplicate signup success when any recovery request fails", async () => {
   const { default: listmonk } = await listmonkModule;
   const cases = [
     {
@@ -344,7 +344,7 @@ void test("stops when any duplicate recovery request fails", async () => {
 
   for (const failure of cases) {
     const request = recordFetch(failure.responses);
-    assert.deepEqual(await listmonk(data, { env: productionEnv(), fetch: request.fetch }), { ok: false });
+    assert.deepEqual(await listmonk(data, { env: productionEnv(), fetch: request.fetch }), { ok: true });
     assert.equal(request.requests.length, failure.requests);
     assert.deepEqual(
       request.requests.slice(2).map(({ body }) => body),
