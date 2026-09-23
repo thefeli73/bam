@@ -45,7 +45,7 @@
     "oxlint-tsgolint": "7.0.2002",
     "postcss": "8.5.28",
     "tailwindcss": "4.3.3",
-    "tsx": "4.23.14",
+    "tsx": "4.23.15",
     "typescript": "7.0.2"
   },
   "browserslist": [
