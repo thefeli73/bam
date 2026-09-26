@@ -10,6 +10,7 @@ jobs:
   lint_and_check:
     name: Lint and Check
     runs-on: ubuntu-latest
+    timeout-minutes: 20
 
     steps:
       - name: Checkout code
@@ -40,7 +41,7 @@ jobs:
 
       - name: Check standalone server starts
         run: |
-          if timeout --signal=TERM 2s pnpm start; then
+          if timeout --signal=TERM --kill-after=3s 2s node .next/standalone/server.js; then
             echo "Standalone server exited unexpectedly"
             exit 1
           else
