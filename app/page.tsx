@@ -36,11 +36,14 @@ export default function Page() {
   );
 }
 
-async function SignupWithCurrentTime() {
+async function loadSignupState() {
   await io();
   const now = new Date();
-  const initialStatus = isSignupBlocked(now);
-  const { oldestDate, youngestDate } = getSignupDateBounds(now);
+  return { initialStatus: isSignupBlocked(now), ...getSignupDateBounds(now) };
+}
+
+async function SignupWithCurrentTime() {
+  const { initialStatus, oldestDate, youngestDate } = await loadSignupState();
 
   return <SignUp initialStatus={initialStatus} oldestDateIso={oldestDate} youngestDateIso={youngestDate} />;
 }
