@@ -192,7 +192,7 @@ importers:
         version: 2.1.1
       cssnano:
         specifier: ^9.0.0
-        version: 9.2.2(postcss@8.5.29)
+        version: 9.3.1(postcss@8.5.29)
       date-fns:
         specifier: ^4.1.0
         version: 4.4.0
@@ -1996,8 +1996,8 @@ packages:
     engines: {node: '>=4'}
     hasBin: true
 
-  cssnano-preset-default@9.2.2:
-    resolution: {integrity: sha512-2xIwkvzbaqfwffkTDMb9fjnI1BZXVEryQ7dhA2yn2t95jo+SkIVnYmZ/ZAmNLrVCj/vmal3FxcLCGh82bQfUvQ==}
+  cssnano-preset-default@9.3.2:
+    resolution: {integrity: sha512-HpBRavK5tdHJLW9eL2vc3zByyjpmDLV2R/3t8pAtykjUp4lPOtF5vR3g7IWJsv7QgdS2PRuBbVKPAcOVMCwrwQ==}
     engines: {node: ^22.22.3 || ^24.15.0 || >=26.0}
     peerDependencies:
       postcss: ^8.5.28
@@ -2008,8 +2008,14 @@ packages:
     peerDependencies:
       postcss: ^8.5.28
 
-  cssnano@9.2.2:
-    resolution: {integrity: sha512-TG/gH1G/wCXM//IVBG5pKJznF1KdtW2OoqojenaSLqL0tSfDP7D8qckbPj59iaFMn7THtYVh2HY7yY/5FGaClw==}
+  cssnano-utils@8.2.0:
+    resolution: {integrity: sha512-S8lXvsU3u0kMJ8JXQ5UekIZQbBZkOuncYaRTXGTRzztrg5Kis/nPrYnJQxPwL+LcePs9aqa/UD6mB78BoHldvw==}
+    engines: {node: ^22.22.3 || ^24.15.0 || >=26.0}
+    peerDependencies:
+      postcss: ^8.5.28
+
+  cssnano@9.3.1:
+    resolution: {integrity: sha512-z9H0t9jc05xtySrd+6+OhXhVlRH4alOzfejM7AR8cWQZGiG2fXmz0hX3G5WZlT1Xspqj3mMp/uPSaOlW7KoE2A==}
     engines: {node: ^22.22.3 || ^24.15.0 || >=26.0}
     peerDependencies:
       postcss: ^8.5.28
@@ -2332,8 +2338,8 @@ packages:
     peerDependencies:
       postcss: ^8.5.28
 
-  postcss-discard-empty@9.0.5:
-    resolution: {integrity: sha512-XDfk8xuYDbdEsfKqqISbxLOJaF9d5vZR5xr+ZdqJcjwSu19C8gZSDMe30hgtYq9+4MrAA0ctUSCN4lkhUcpjjA==}
+  postcss-discard-empty@9.0.6:
+    resolution: {integrity: sha512-Bi4fYujDBqBVKsqPOIlZ2QElVa/rDHbfz0nTrrDyML2hoKJndk/qJuc1kN2+OChHDQNIHUjfEX3jHCiGDAt3wQ==}
     engines: {node: ^22.22.3 || ^24.15.0 || >=26.0}
     peerDependencies:
       postcss: ^8.5.28
@@ -2396,14 +2402,14 @@ packages:
     peerDependencies:
       postcss: ^8.4
 
-  postcss-merge-longhand@9.2.0:
-    resolution: {integrity: sha512-7ZozpQkYDYfzYV4MYcDJZScXHVq2WS4A8RJEJ9nwxhRcvXP/7GBEMNNLadaqb53q4uCJnJtt36k0kFzcnhBK+w==}
+  postcss-merge-longhand@9.2.1:
+    resolution: {integrity: sha512-dYwIiRP/lH2ItiUo/t9QG/Vn0ac5dPjISTTosF8yfU0PaFZcRYb8mnO82LxQtfYfUqtzWduYGrGVDyLi8N5xxQ==}
     engines: {node: ^22.22.3 || ^24.15.0 || >=26.0}
     peerDependencies:
       postcss: ^8.5.28
 
-  postcss-merge-rules@9.0.8:
-    resolution: {integrity: sha512-kp14dE0AlXwd69pcfU6VWG9G6pCPK11OWJqlb3/ccoO9CRKGVsqiHOq/hpkAm4scYzuo3ZMYQs1E0O7c2K8SSA==}
+  postcss-merge-rules@9.1.2:
+    resolution: {integrity: sha512-hDAdZNa4MgxPK7VbKqFHz7NlmZMehhcSWP4wDi77mmmUTs6K/rTw0hekCN4t9vBhwKhM9gKsGJS/FcGQB1bZdg==}
     engines: {node: ^22.22.3 || ^24.15.0 || >=26.0}
     peerDependencies:
       postcss: ^8.5.28
@@ -2498,8 +2504,8 @@ packages:
     peerDependencies:
       postcss: ^8.4
 
-  postcss-ordered-values@9.0.6:
-    resolution: {integrity: sha512-/Oua4QNx4So8QSEYC+kH5lEM8Z67D8ONMZBx/J5hidkMIRfYGyrUcdlvEZ3e48A6YlOq5hyHb/axcNezq1hhAQ==}
+  postcss-ordered-values@9.0.7:
+    resolution: {integrity: sha512-vEXN/t5iqwZvRAURoAsp06CxIBwJ6o9ViDAbENZPd6KgLys2U/z4UIafket5S/L2ps7cR216dN++Vt6d28frqQ==}
     engines: {node: ^22.22.3 || ^24.15.0 || >=26.0}
     peerDependencies:
       postcss: ^8.5.28
@@ -4010,20 +4016,20 @@ snapshots:
 
   cssesc@3.0.0: {}
 
-  cssnano-preset-default@9.2.2(postcss@8.5.29):
+  cssnano-preset-default@9.3.2(postcss@8.5.29):
     dependencies:
       browserslist: 4.29.3
-      cssnano-utils: 8.1.0(postcss@8.5.29)
+      cssnano-utils: 8.2.0(postcss@8.5.29)
       postcss: 8.5.29
       postcss-calc: 11.2.2(postcss@8.5.29)
       postcss-colormin: 9.0.6(postcss@8.5.29)
       postcss-convert-values: 9.0.7(postcss@8.5.29)
       postcss-discard-comments: 9.0.6(postcss@8.5.29)
       postcss-discard-duplicates: 9.0.5(postcss@8.5.29)
-      postcss-discard-empty: 9.0.5(postcss@8.5.29)
+      postcss-discard-empty: 9.0.6(postcss@8.5.29)
       postcss-discard-overridden: 9.0.5(postcss@8.5.29)
-      postcss-merge-longhand: 9.2.0(postcss@8.5.29)
-      postcss-merge-rules: 9.0.8(postcss@8.5.29)
+      postcss-merge-longhand: 9.2.1(postcss@8.5.29)
+      postcss-merge-rules: 9.1.2(postcss@8.5.29)
       postcss-minify-font-values: 9.0.7(postcss@8.5.29)
       postcss-minify-gradients: 9.0.6(postcss@8.5.29)
       postcss-minify-params: 9.0.6(postcss@8.5.29)
@@ -4037,7 +4043,7 @@ snapshots:
       postcss-normalize-unicode: 9.0.5(postcss@8.5.29)
       postcss-normalize-url: 9.0.5(postcss@8.5.29)
       postcss-normalize-whitespace: 9.0.5(postcss@8.5.29)
-      postcss-ordered-values: 9.0.6(postcss@8.5.29)
+      postcss-ordered-values: 9.0.7(postcss@8.5.29)
       postcss-reduce-initial: 9.0.6(postcss@8.5.29)
       postcss-reduce-transforms: 9.0.4(postcss@8.5.29)
       postcss-svgo: 9.0.4(postcss@8.5.29)
@@ -4048,9 +4054,14 @@ snapshots:
       '@csstools/css-tokenizer': 4.0.2
       postcss: 8.5.29
 
-  cssnano@9.2.2(postcss@8.5.29):
+  cssnano-utils@8.2.0(postcss@8.5.29):
     dependencies:
-      cssnano-preset-default: 9.2.2(postcss@8.5.29)
+      '@csstools/css-tokenizer': 4.0.2
+      postcss: 8.5.29
+
+  cssnano@9.3.1(postcss@8.5.29):
+    dependencies:
+      cssnano-preset-default: 9.3.2(postcss@8.5.29)
       postcss: 8.5.29
 
   csso@5.0.5:
@@ -4386,8 +4397,9 @@ snapshots:
       cssnano-utils: 8.1.0(postcss@8.5.29)
       postcss: 8.5.29
 
-  postcss-discard-empty@9.0.5(postcss@8.5.29):
+  postcss-discard-empty@9.0.6(postcss@8.5.29):
     dependencies:
+      cssnano-utils: 8.1.0(postcss@8.5.29)
       postcss: 8.5.29
 
   postcss-discard-overridden@9.0.5(postcss@8.5.29):
@@ -4443,19 +4455,20 @@ snapshots:
       postcss: 8.5.29
       postcss-value-parser: 4.2.0
 
-  postcss-merge-longhand@9.2.0(postcss@8.5.29):
+  postcss-merge-longhand@9.2.1(postcss@8.5.29):
     dependencies:
+      '@csstools/css-tokenizer': 4.0.2
       browserslist: 4.29.3
-      cssnano-utils: 8.1.0(postcss@8.5.29)
+      cssnano-utils: 8.2.0(postcss@8.5.29)
       postcss: 8.5.29
       stylehacks: 9.0.7(postcss@8.5.29)
 
-  postcss-merge-rules@9.0.8(postcss@8.5.29):
+  postcss-merge-rules@9.1.2(postcss@8.5.29):
     dependencies:
       '@csstools/css-tokenizer': 4.0.2
       browserslist: 4.29.3
       caniuse-api: 4.0.0
-      cssnano-utils: 8.1.0(postcss@8.5.29)
+      cssnano-utils: 8.2.0(postcss@8.5.29)
       postcss: 8.5.29
       postcss-minify-selectors: 9.0.6(postcss@8.5.29)
 
@@ -4547,9 +4560,9 @@ snapshots:
     dependencies:
       postcss: 8.5.29
 
-  postcss-ordered-values@9.0.6(postcss@8.5.29):
+  postcss-ordered-values@9.0.7(postcss@8.5.29):
     dependencies:
-      cssnano-utils: 8.1.0(postcss@8.5.29)
+      cssnano-utils: 8.2.0(postcss@8.5.29)
       postcss: 8.5.29
 
   postcss-overflow-shorthand@7.0.1(postcss@8.5.29):
