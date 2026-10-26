@@ -1,27 +1,26 @@
-import eventConfig from "@/event-dates.json";
+import eventConfig, { type EventConfig } from "./event-config";
+import type { SignupStatus } from "./signup-schema";
 import { z } from "zod";
 
-export type SignupStatus = { blocked: boolean; message?: string };
+export { signupFormSchema, signupFormClientSchema, type SignupStatus } from "./signup-schema";
 
-const signupFormBase = {
-  name: z.string().trim().min(2, { error: "Name is required" }).max(50, { error: "Name is too long" }),
-  email: z
-    .string()
-    .trim()
-    .max(254, { error: "Email is too long" })
-    .pipe(z.email({ error: "Email is invalid" }))
-    .transform((email) => email.toLowerCase()),
-};
+let ticketCutoffCache: { start: number; timeZone: string; instant: number } | undefined;
 
-export const signupFormSchema = z.object({
-  ...signupFormBase,
-  dob: z.iso.date(),
-});
+export function getActiveTicketUrl(currentTime: Date, config: EventConfig = eventConfig): string | null {
+  if (!config.ticketUrl || config.eventDates.length === 0) {
+    return null;
+  }
+  if (Number.isNaN(currentTime.getTime())) {
+    throw new TypeError("Invalid date");
+  }
 
-export const signupFormClientSchema = z.object({
-  ...signupFormBase,
-  dob: z.date({ error: "Birthday is required" }),
-});
+  const latestEventDate = config.eventDates.reduce((latest, date) => (date > latest ? date : latest));
+  const { start } = parseEventBlock(latestEventDate, config.cutoffTime, config.blockDurationHours);
+  if (ticketCutoffCache?.start !== start || ticketCutoffCache.timeZone !== config.timeZone) {
+    ticketCutoffCache = { start, timeZone: config.timeZone, instant: resolveTicketCutoff(start, config.timeZone) };
+  }
+  return currentTime.getTime() < ticketCutoffCache.instant ? config.ticketUrl : null;
+}
 
 type CivilDateTime = {
   year: number;
@@ -68,6 +67,29 @@ function getCivilDateTime(instant: Date, timeZone: string): CivilDateTime {
 
 function civilDateTimeScalar({ year, month, day, hour, minute, second }: CivilDateTime): number {
   return Date.UTC(year, month - 1, day, hour, minute, second);
+}
+
+function resolveTicketCutoff(target: number, timeZone: string): number {
+  const civilAt = (instant: number) => civilDateTimeScalar(getCivilDateTime(new Date(instant), timeZone));
+  // These second-aligned probes cover the offsets around an IANA transition.
+  const surrounding = 48 * 60 * 60 * 1000;
+  const candidates = [
+    ...new Set([target - surrounding, target, target + surrounding].map((probe) => target - (civilAt(probe) - probe))),
+  ].sort((a, b) => a - b);
+  for (const candidate of candidates) {
+    // A repeated cutoff expires at its first occurrence, permanently.
+    if (civilAt(candidate) === target) return candidate;
+  }
+
+  // A skipped cutoff expires when the clock first jumps past it, not later in the gap.
+  let lower = Math.max(...candidates.filter((candidate) => civilAt(candidate) < target));
+  let upper = Math.min(...candidates.filter((candidate) => civilAt(candidate) > target));
+  while (upper - lower > 1) {
+    const middle = Math.floor(lower + (upper - lower) / 2);
+    if (civilAt(middle) >= target) upper = middle;
+    else lower = middle;
+  }
+  return upper;
 }
 
 function parseEventBlock(

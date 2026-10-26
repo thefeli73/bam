@@ -1,0 +1,16 @@
+{
+  // Change for each event: add its date in YYYY-MM-DD format. Array order does not matter.
+  "eventDates": ["2026-08-29", "2026-05-09", "1999-01-01"],
+  // Normally leave these settings unchanged. They define the signup closure policy.
+  // Sign-ups close at cutoffTime in timeZone for blockDurationHours.
+  "cutoffTime": "23:00",
+  "blockDurationHours": 6,
+  "timeZone": "Europe/Stockholm",
+  "message": "Sign-ups are closed for today's event.",
+
+  // Change for each event: set its HTTPS ticket link, or use null to disable emails.
+  // This link belongs to the latest chronological event.
+  // Emails include it only before that event's cutoffTime; it never resumes after closure.
+  // When adding a newer event, replace or clear this URL or the old link reactivates.
+  "ticketUrl": null,
+}

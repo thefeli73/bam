@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { signupFormSubmit } from "@/lib/actions";
 import type { SignupResult } from "@/lib/signup";
-import { signupFormClientSchema, type SignupStatus } from "@/lib/signup-time-check";
+import { signupFormClientSchema, type SignupStatus } from "@/lib/signup-schema";
 import { cn } from "@/lib/utils";
 
 import { useSignupAnalytics } from "./use-signup-analytics";

@@ -14,5 +14,9 @@ export async function signupFormSubmit(data: unknown): Promise<SignupResult> {
       const { default: listmonk } = await import("./listmonk");
       return listmonk(payload);
     },
+    sendTicketEmail: async (email, ticketUrl) => {
+      const { sendTicketEmail } = await import("./listmonk");
+      return sendTicketEmail(email, ticketUrl);
+    },
   });
 }

@@ -1,6 +1,6 @@
 import type { ListmonkData, ListmonkResult } from "./listmonk";
 import type { SignupRateLimitCheck } from "./signup-rate-limit";
-import { isSignupBlocked, isSignupDateOfBirthAllowed, signupFormSchema } from "./signup-time-check";
+import { getActiveTicketUrl, isSignupBlocked, isSignupDateOfBirthAllowed, signupFormSchema } from "./signup-time-check";
 
 export type SignupResult =
   | { status: "success"; message: string }
@@ -13,6 +13,9 @@ export type SignupDependencies = {
   getClientIp: () => Promise<string>;
   checkRateLimit: SignupRateLimitCheck;
   subscribe: (data: ListmonkData) => Promise<ListmonkResult>;
+  sendTicketEmail: (email: string, ticketUrl: string) => Promise<{ ok: boolean }>;
+  getTicketUrl?: (now: Date) => string | null;
+  currentTime?: () => Date;
 };
 
 const GENERIC_ERROR = "An error occurred while trying to sign up. Please try again.";
@@ -51,13 +54,25 @@ export async function submitSignup(data: unknown, dependencies: SignupDependenci
       lists: [3],
       attribs: { dob: result.data.dob },
     });
-    return subscribed.ok
-      ? {
-          status: "success",
-          message:
-            "If your subscription still needs confirming, we’ve sent you a confirmation email. Check your inbox, junk, or spam folder if you don’t see it.",
+    if (!subscribed.ok) return { status: "error", message: GENERIC_ERROR };
+
+    if (subscribed.ticketEligible) {
+      const ticketUrl = (dependencies.getTicketUrl ?? getActiveTicketUrl)(dependencies.currentTime?.() ?? new Date());
+      if (ticketUrl) {
+        try {
+          const sent = await dependencies.sendTicketEmail(result.data.email, ticketUrl);
+          if (!sent.ok) console.error("Ticket email could not be queued.");
+        } catch {
+          console.error("Ticket email could not be queued.");
         }
-      : { status: "error", message: GENERIC_ERROR };
+      }
+    }
+
+    return {
+      status: "success",
+      message:
+        "If your subscription still needs confirming, we’ve sent you a confirmation email. Check your inbox, junk, or spam folder if you don’t see it.",
+    };
   } catch {
     return { status: "error", message: GENERIC_ERROR };
   }
