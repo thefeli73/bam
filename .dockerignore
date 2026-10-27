@@ -8,3 +8,8 @@ README.md
 .env*
 next-env.d.ts
 *.tsbuildinfo
+.gitea
+docs
+EVENT_DATES_GUIDE.md
+AGENTS.md
+renovate.json
