@@ -52,7 +52,7 @@
     ">0.5%, last 2 versions, Firefox ESR, not dead"
   ],
   "engines": {
-    "node": "24.x"
+    "node": "26.x"
   },
   "packageManager": "pnpm@12.15.0"
 }
