@@ -1,6 +1,6 @@
 {
   // Change for each event: add its date in YYYY-MM-DD format. Array order does not matter.
-  "eventDates": ["2026-11-28", 2026-08-29", "2026-05-09", "1999-01-01"],
+  "eventDates": ["2026-11-28", "2026-08-29", "2026-05-09", "1999-01-01"],
   // Normally leave these settings unchanged. They define the signup closure policy.
   // Sign-ups close at cutoffTime in timeZone for blockDurationHours.
   "cutoffTime": "23:00",
