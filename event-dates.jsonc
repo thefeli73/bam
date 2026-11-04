@@ -12,5 +12,5 @@
   // This link belongs to the latest chronological event.
   // Emails include it only before that event's cutoffTime; it never resumes after closure.
   // When adding a newer event, replace or clear this URL or the old link reactivates.
-  "ticketUrl": "https://linktr.ee/bangersandmash.gbg",
+  "ticketUrl": "https://secure.tickster.com/en/1dzl4u8kbt1ngk0/products",
 }
