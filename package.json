@@ -41,7 +41,7 @@
     "@types/node": "26.6.6",
     "@types/react": "19.3.0",
     "@types/react-dom": "19.3.0",
-    "oxfmt": "0.79.0",
+    "oxfmt": "0.80.0",
     "oxlint": "1.94.0",
     "oxlint-tsgolint": "7.0.2008",
     "postcss": "8.5.33",
